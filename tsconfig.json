@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "sourceMap": false,
+    "strictNullChecks": true,
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "target": "es6",
+    "allowJs": false,
+    "declaration": true,
+    "declarationDir": "./dist/types/",
+    "baseUrl": "../../",
+    "experimentalDecorators": true,
+    "esModuleInterop": true
+  },
+  "include": ["."],
+  "exclude": ["node_modules"]
+}
