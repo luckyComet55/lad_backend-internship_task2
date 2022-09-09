@@ -60,6 +60,8 @@ async function runServer():  Promise<any> {
     try {
         const server: Server = await createServer();
         console.log("Server started!");
+        // @ts-ignore
+        console.log(`Connected to ${server.app.natsConn.getServer()} NATS server`);
     } catch (err) {
         console.log(`The ${err.constructor.name} has occurred`);
         console.error(err);
