@@ -11,17 +11,3 @@ export const DataBaseSource = new DataSource({
     database: "storage",
     entities: [Fact]
 })
-
-DataBaseSource.initialize()
-    .then(async () => {
-        DataBaseSource.manager.findOneBy(Fact, {
-            f_id: 1
-        }).then((res) => {
-            console.log("Successfully found fact with f_id = 1: ");
-            console.log(res);
-        }).catch(err => {
-            console.log("An error occurred: " + err);
-        }).finally(() => console.log("End of query"));
-
-    })
-    .catch(err => console.error(err))

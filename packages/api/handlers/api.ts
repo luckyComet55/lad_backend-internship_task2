@@ -6,7 +6,7 @@ async function natsPublisher(request: Request, h: ResponseToolkit): Promise<any>
     const sc = StringCodec();
     // @ts-ignore
     const nc = request.server.app.natsConn;
-    nc.publish("tastefulMessage", sc.encode("Hello from HAPI server!"));
+    nc.publish("storage.api.request.find", sc.encode("f_id:2"));
     return {
         status: 200,
         result: "OK",

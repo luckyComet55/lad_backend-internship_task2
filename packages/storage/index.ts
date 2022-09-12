@@ -3,6 +3,8 @@ import { StringCodec } from "nats";
 import { connect2Nats, closeNats } from "../common/index.js";
 import { HapiServerConnectionError } from "../common/index.js";
 import { stopRoute } from "./handlers/dev-stop.js";
+import { DataBase } from "./repository/dbconn.js";
+import {Fact} from "./repository/entity/Fact.js";
 
 async function createServer(): Promise<Server> {
     const server: Server = new Server({
@@ -37,6 +39,7 @@ async function createServer(): Promise<Server> {
 async function runServer() {
     try {
         const server: Server = await createServer();
+        const dataBase = new DataBase();
         console.log("Server started!");
         // @ts-ignore
         console.log(`Connected to ${server.app.natsConn.getServer()} NATS server`);
@@ -44,11 +47,20 @@ async function runServer() {
         // @ts-ignore
         const nc = server.app.natsConn;
         const sc = StringCodec();
-        const sub = nc.subscribe("tastefulMessage");
+        const sub = nc.subscribe("storage.api.request.find");
         for await (const m of sub) {
-            console.log(`[${sub.getProcessed()}]: ${sc.decode(m.data)}`);
+            console.log(`${m.subject.split(".")[3]}: ${sc.decode(m.data).split(":")}`);
+            const [key, val] = sc.decode(m.data).split(":");
+            const dbQueryRes: Fact | null = await dataBase.find(key, val);
+            if(dbQueryRes === null) {
+                console.log("Query returned nothing");
+            } else {
+                console.log(`<${dbQueryRes.f_dob}> [${dbQueryRes.f_id}]: "${dbQueryRes.f_cont}"`);
+            }
         }
         console.log("Subscription closed");
+        await dataBase.close();
+        console.log("Connection with database closed");
     } catch (err) {
         console.log(`The ${err.constructor.name} has occurred`);
         console.error(err);
