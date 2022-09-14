@@ -9,5 +9,6 @@ export const DataBaseSource = new DataSource({
     username: "postgres",
     password: "",
     database: "storage",
-    entities: [Fact]
+    entities: [Fact],
+    synchronize: true
 })
